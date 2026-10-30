@@ -1,0 +1,64 @@
+---
+description: FlacDrive Python layout, naming, and call formatting
+alwaysApply: true
+---
+
+# Python style (FlacDrive)
+
+## File layout
+
+- One class per file; filename matches the class name (e.g. `FlacCdImage.py` for `FlacCdImage`).
+- Shared constants live in `Constants.py`. Entry / CLI stays in `flacdrive.py`.
+
+## Indentation
+
+- Use **3 spaces** per indent level (never 4, never tabs).
+- Exception: wrapped function parameters use **column alignment**, not +3 spaces (see below).
+
+## Naming
+
+- **Classes**: PascalCase (`FlacCdImage`, `ProxySession`, `TrackInfo`).
+- **Variables, attributes, parameters, methods, functions**: camelCase (`cacheFrames`, `totalSamples`, `parseCuesheet`).
+- **Constants**: UPPERCASE_WITH_UNDERSCORES (`SECTOR_SIZE`, `IMDPROXY_REQ_READ`).
+- Do not rename third-party API attributes (e.g. mutagen `start_offset`).
+
+## Function parameters (declarations and calls)
+
+- If all parameters fit reasonably on one line, keep them on one line.
+- Otherwise:
+  - Put the opening `(` and the **first** parameter on the same line as the function name.
+  - Put each following parameter on its own line, **aligned to the same column as the first parameter** (spaces under `param1`, not an extra indent level).
+  - Put the closing `)` on the **same line** as the final parameter (no lone `)` on the next line).
+
+```python
+# Good — single line
+ProxySession(image, reader, writer).serve()
+
+# Good — wrapped: later params line up under the first
+def serveTcp(image: FlacCdImage,
+             host: str,
+             port: int,
+             once: bool = True) -> None:
+
+serveTcp(image,
+         host=args.host,
+         port=args.tcp,
+         once=not args.keepListening)
+
+function(param1,
+         param2,
+         param3)
+
+# Bad — first param dropped to next line
+def serveTcp(
+   image: FlacCdImage,
+   host: str,
+   port: int,
+   once: bool = True):
+
+# Bad — later params use block indent (+3) instead of aligning under first
+def serveTcp(image: FlacCdImage,
+   host: str,
+   port: int,
+   once: bool = True) -> None:
+```
